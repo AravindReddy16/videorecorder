@@ -5,22 +5,20 @@ let vstop = document.querySelector('#v-stop')
 
 let front = true
 
-const rotate = () => {
-    front = !front
-}
-
-function timer() {
-    return front ? 'user' : 'environment'
-}
-
-setInterval(timer,1000)
-
-navigator.mediaDevices.getUserMedia({
+let contrains = {
     audio: false,
     video: {
-        facingMode: setInterval(timer,1000)
-    },
-}).then((stream) => {
+        facingMode: {exact: 'user'}
+    }
+};
+
+function access(contrains) {
+    navigator.mediaDevices.getUserMedia(contrains).then((stream) => {
+        media(stream)
+    })
+}
+
+function media(stream) {
     videocam.autoplay = true
     videocam.srcObject = stream
     let recorder = new MediaRecorder(stream,{
@@ -38,8 +36,12 @@ navigator.mediaDevices.getUserMedia({
         vstop.disabled = true
         vstart.disabled = false
     })
+}
 
-    vrotate.addEventListener('click', ()=>{
-        rotate()
-    })
+access(contrains)
+
+vrotate.addEventListener('click', ()=>{
+    front = !front
+    contrains.video.facingMode.exact = front ? 'user' : 'environment'
+    access(contrains)
 })
