@@ -12,7 +12,7 @@ const rotate = () => {
 navigator.mediaDevices.getUserMedia({
     audio: false,
     video: setInterval(()=>{
-        return {facingMode : front ? 'user' : 'environment'}
+        return {facingMode : !front ? 'user' : 'environment'}
     },1000),
 }).then((stream) => {
     videocam.autoplay = true
